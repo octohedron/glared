@@ -60,7 +60,6 @@ func getZoneDNSList(d domain) zoneDNSList {
 	logError(err)
 	body, err := ioutil.ReadAll(res.Body)
 	logError(err)
-	log.Println(string(body))
 	zRecords := zoneDNSList{}
 	err = json.Unmarshal(body, &zRecords)
 	logError(err)
@@ -90,8 +89,14 @@ func updateDNS(d domain, ip string) {
 	res, err := client.Do(req)
 	logError(err)
 	body, err := ioutil.ReadAll(res.Body)
-	log.Println(string(body))
 	logError(err)
+	updateResult := updateDNSResult{}
+	err = json.Unmarshal(body, &updateResult)
+	logError(err)
+	if len(updateResult.Errors) > 0 {
+		log.Println(updateResult.Errors[0].Message)
+		logPanic(errors.New(updateResult.Errors[0].Message))
+	}
 }
 
 func getIPv4Address() IPInfo {
@@ -128,9 +133,6 @@ func getConfig() []domain {
 	logPanic(err)
 	err = viper.UnmarshalKey("auth", &auth)
 	logPanic(err)
-	for _, d := range domains {
-		log.Println("name", d.Name, "zone", d.Zone)
-	}
 	return domains
 }
 
