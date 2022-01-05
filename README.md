@@ -40,7 +40,6 @@ Should print something like
 2022/01/05 22:23:03 Updated example3.com
 ```
 
-Motivation: I have a dynamic IP address at home and every time the light goes
-out for any reason, i.e. using too much electricity, I have to manually update
-the A records of all domains hosted in my home server in cloudflare. This avoids
-having to do it manually, just need to run it on boot.
+Motivation: I have a dynamic IP address at home and every time the electricity
+goes out (used too much power), I have to manually update the A records of all
+domains hosted at home with cloudflare.
