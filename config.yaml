@@ -1,0 +1,16 @@
+domains:
+  - name: "example0.com"
+    zone: "14188253e4f00003d5d45e03pp0ppp23"
+    proxied: false
+  - name: "example1.com"
+    zone: "14188253e4f00003d5d45e03pp0ppp23"
+    proxied: false
+  - name: "example2.com"
+    zone: "14188253e4f00003d5d45e03pp0ppp23"
+    proxied: false
+  - name: "example3.com"
+    zone: "14188253e4f00003d5d45e03pp0ppp23"
+    proxied: false
+auth:
+  key: "14188253e4f00003d5d45e03pp0ppp23"
+  email: "your-email@example.com"
