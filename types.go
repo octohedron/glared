@@ -6,6 +6,18 @@ type IPInfo struct {
 	IP string `json:"ip"`
 }
 
+type domain struct {
+	Name    string
+	Zone    string
+	ID      string
+	Proxied bool
+}
+
+type authentication struct {
+	Key   string
+	Email string
+}
+
 type updateDNSResult struct {
 	Result struct {
 		ID        string `json:"id"`

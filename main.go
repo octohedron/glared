@@ -12,18 +12,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type domain struct {
-	Name    string
-	Zone    string
-	ID      string
-	Proxied bool
-}
-
-type authentication struct {
-	Key   string
-	Email string
-}
-
 var auth authentication
 
 func logError(err error) {
@@ -31,6 +19,7 @@ func logError(err error) {
 		log.Printf("%s: %s \n", "Error", err)
 	}
 }
+
 func logPanic(err error) {
 	if err != nil {
 		log.Panicf("%s: %s \n", "Error", err)
