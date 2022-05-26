@@ -131,14 +131,13 @@ func getConfig() []domain {
 
 func keepUpdated() {
 	for {
-		ipA := getIPv4Address()
-		if ipA.IP != IP_ADDRESS {
+		ipInfo := getIPv4Address()
+		if ipInfo.IP != IP_ADDRESS {
 			log.Printf(
 				"IPV4 address changed from %s to %s, updating/n",
-				IP_ADDRESS, ipA.IP)
-			domains := getConfig()
-			updateDomains(ipA.IP, domains)
-			IP_ADDRESS = ipA.IP
+				IP_ADDRESS, ipInfo.IP)
+			updateDomains(ipInfo.IP, getConfig())
+			IP_ADDRESS = ipInfo.IP
 		}
 		time.Sleep(10 * time.Minute)
 	}
