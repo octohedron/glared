@@ -8,11 +8,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/spf13/viper"
 )
 
-var auth authentication
+var (
+	auth       authentication
+	IP_ADDRESS = ""
+)
 
 func logError(err error) {
 	if err != nil {
@@ -125,9 +129,21 @@ func getConfig() []domain {
 	return domains
 }
 
+func keepUpdated() {
+	for {
+		ipA := getIPv4Address()
+		if ipA.IP != IP_ADDRESS {
+			log.Printf(
+				"IPV4 address changed from %s to %s, updating/n",
+				IP_ADDRESS, ipA.IP)
+			domains := getConfig()
+			updateDomains(ipA.IP, domains)
+			IP_ADDRESS = ipA.IP
+		}
+		time.Sleep(10 * time.Minute)
+	}
+}
+
 func main() {
-	ipA := getIPv4Address()
-	log.Println("IPV4 address", ipA.IP)
-	domains := getConfig()
-	updateDomains(ipA.IP, domains)
+	keepUpdated()
 }
