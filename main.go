@@ -109,9 +109,13 @@ func getIPv4Address() IPInfo {
 func updateDomains(ip string, domains []domain) {
 	for _, d := range domains {
 		records := getZoneDNSList(d)
-		d.ID = records.Result[0].ID
-		updateDNS(d, ip)
-		log.Println("Updated", d.Name)
+		if len(records.Result) > 0 {
+			d.ID = records.Result[0].ID
+			updateDNS(d, ip)
+			log.Println("Updated", d.Name)
+		} else {
+			log.Println("records EMPTY", records)
+		}
 	}
 }
 
