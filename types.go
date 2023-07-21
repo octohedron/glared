@@ -7,6 +7,7 @@ type IPInfo struct {
 }
 
 type domain struct {
+	Domain  string
 	Name    string
 	Zone    string
 	ID      string
@@ -84,6 +85,7 @@ type zoneDNSList struct {
 }
 
 type DNSRecord struct {
+	Domain     string      `json:"domain"`
 	RecordType string      `json:"type"`
 	Name       string      `json:"name"`
 	Content    string      `json:"content"`
