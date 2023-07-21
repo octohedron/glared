@@ -12,7 +12,7 @@ Same `config.yaml`
 ```
 domains:
   - domain: "example0.com"
-    name: "subdomain0"
+    name: "example0.com"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
     proxied: false
   - domain: "example1.com"
@@ -39,11 +39,9 @@ Usage:
 Should print something like
 
 ```
-2022/01/05 22:22:54 IPV4 address 200.157.52.125
-2022/01/05 22:22:56 Updated example0.com
-2022/01/05 22:22:58 Updated example1.com
-2022/01/05 22:23:00 Updated example2.com
-2022/01/05 22:23:03 Updated example3.com
+2023/07/21 12:33:31 IPV4 address hasn't changed, 200.22.20.15 = 200.22.20.15 in example0.com
+2023/07/21 12:33:31 IPV4 address hasn't changed, 200.22.20.15 = 200.22.20.15 in example1.example1.com
+2023/07/21 12:33:32 IPV4 address hasn't changed, 200.22.20.15 = 200.22.20.15 in example2.example2.com
 ```
 
 Motivation: I have a dynamic IP address at home and every time the electricity
