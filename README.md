@@ -4,6 +4,8 @@
 - Uses the config.yaml to get the auth email, cloudflare token and list of
   domains
 - Updates each domain's A record with the public IPv4 address
+- Supports domains and subdomains, i.e. if you want to update the domain only, set the domain and name to the same value in the config.
+- If you want to update only a subdomain and not the domain, set the name and domain to a different value, i.e. if your domain is `"example.com"` and you want to udpate |`"subdomain.example.com"` set the latter as name and the former as domain in the `config.yaml`
 
 Same `config.yaml`
 
