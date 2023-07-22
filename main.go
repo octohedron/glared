@@ -17,12 +17,6 @@ var (
 	auth authentication
 )
 
-func logError(err error) {
-	if err != nil {
-		log.Printf("%s: %s \n", "Error", err)
-	}
-}
-
 func logPanic(err error) {
 	if err != nil {
 		log.Panicf("%s: %s \n", "Error", err)
@@ -42,15 +36,15 @@ func getZoneDNSList(d domain) zoneDNSList {
 	req, err := http.NewRequest("GET", fmt.Sprintf(
 		"https://api.cloudflare.com/client/v4/zones/%s/dns_records?type=A",
 		d.Zone), nil)
-	logError(err)
+	logPanic(err)
 	setHeaders(req, true)
 	res, err := client.Do(req)
-	logError(err)
+	logPanic(err)
 	body, err := ioutil.ReadAll(res.Body)
-	logError(err)
+	logPanic(err)
 	zRecords := zoneDNSList{}
 	err = json.Unmarshal(body, &zRecords)
-	logError(err)
+	logPanic(err)
 	if len(zRecords.Errors) > 0 {
 		logPanic(errors.New(zRecords.Errors[0].Message))
 	}
@@ -71,15 +65,15 @@ func updateDNS(d domain, ip string) {
 		d.Zone, d.ID)
 	jsonValue, _ := json.Marshal(newDNS)
 	req, err := http.NewRequest("PUT", updateDNSURL, bytes.NewBuffer(jsonValue))
-	logError(err)
+	logPanic(err)
 	setHeaders(req, false)
 	res, err := client.Do(req)
-	logError(err)
+	logPanic(err)
 	body, err := ioutil.ReadAll(res.Body)
-	logError(err)
+	logPanic(err)
 	updateResult := updateDNSResult{}
 	err = json.Unmarshal(body, &updateResult)
-	logError(err)
+	logPanic(err)
 	if len(updateResult.Errors) > 0 {
 		logPanic(errors.New(updateResult.Errors[0].Message))
 	}
@@ -88,14 +82,14 @@ func updateDNS(d domain, ip string) {
 func getIPv4Address() IPInfo {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://ipinfo.io", nil)
-	logError(err)
+	logPanic(err)
 	res, err := client.Do(req)
-	logError(err)
+	logPanic(err)
 	body, err := ioutil.ReadAll(res.Body)
-	logError(err)
+	logPanic(err)
 	ipInfo := IPInfo{}
 	err = json.Unmarshal(body, &ipInfo)
-	logError(err)
+	logPanic(err)
 	return ipInfo
 }
 
@@ -113,10 +107,10 @@ func getConfig() []domain {
 	return domains
 }
 
-func keepUpdated() {
+func main() {
+	domains := getConfig()
 	for {
 		ipInfo := getIPv4Address()
-		domains := getConfig()
 		for _, d := range domains {
 			dnsRecords := getZoneDNSList(d)
 			for _, r := range dnsRecords.Result {
@@ -138,8 +132,4 @@ func keepUpdated() {
 		}
 		time.Sleep(30 * time.Second)
 	}
-}
-
-func main() {
-	keepUpdated()
 }
