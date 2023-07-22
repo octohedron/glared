@@ -44,6 +44,4 @@ Should print something like
 2023/07/21 12:33:32 IPV4 address hasn't changed, 200.22.20.15 = 200.22.20.15 in example2.example2.com
 ```
 
-Motivation: I have a dynamic IP address at home and every time the electricity
-goes out (used too much power), I have to manually update the A records of all
-domains hosted at home with cloudflare.
+Motivation: I have a dynamic IP address at home and every time the electricity goes out (used too much power), I have to manually update the A records of all domains hosted at home with cloudflare.
