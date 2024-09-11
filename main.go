@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/spf13/viper"
 )
@@ -40,7 +39,7 @@ func getZoneDNSList(d domain) zoneDNSList {
 	setHeaders(req, true)
 	res, err := client.Do(req)
 	logPanic(err)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	logPanic(err)
 	zRecords := zoneDNSList{}
 	err = json.Unmarshal(body, &zRecords)
@@ -69,7 +68,7 @@ func updateDNS(d domain, ip string) {
 	setHeaders(req, false)
 	res, err := client.Do(req)
 	logPanic(err)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	logPanic(err)
 	updateResult := updateDNSResult{}
 	err = json.Unmarshal(body, &updateResult)
@@ -85,7 +84,7 @@ func getIPv4Address() IPInfo {
 	logPanic(err)
 	res, err := client.Do(req)
 	logPanic(err)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	logPanic(err)
 	ipInfo := IPInfo{}
 	err = json.Unmarshal(body, &ipInfo)
@@ -109,27 +108,24 @@ func getConfig() []domain {
 
 func main() {
 	domains := getConfig()
-	for {
-		ipInfo := getIPv4Address()
-		for _, d := range domains {
-			dnsRecords := getZoneDNSList(d)
-			for _, r := range dnsRecords.Result {
-				if r.ZoneName == d.Domain &&
-					(r.Name == d.Name || r.Name == d.Name+"."+d.Domain) {
-					if r.Type == "A" && ipInfo.IP != r.Content {
-						log.Printf(
-							"IPV4 address changed from %s to %s in %s, updating\n",
-							r.Content, ipInfo.IP, r.Name)
-						updateDNS(d, ipInfo.IP)
-						r.Content = ipInfo.IP
-					} else {
-						log.Printf(
-							"IPV4 address hasn't changed, %s = %s in %s",
-							r.Content, ipInfo.IP, r.Name)
-					}
+	ipInfo := getIPv4Address()
+	for _, d := range domains {
+		dnsRecords := getZoneDNSList(d)
+		for _, r := range dnsRecords.Result {
+			if r.ZoneName == d.Domain &&
+				(r.Name == d.Name || r.Name == d.Name+"."+d.Domain) {
+				if r.Type == "A" && ipInfo.IP != r.Content {
+					log.Printf(
+						"IPV4 address changed from %s to %s in %s, updating\n",
+						r.Content, ipInfo.IP, r.Name)
+					updateDNS(d, ipInfo.IP)
+					r.Content = ipInfo.IP
+				} else {
+					log.Printf(
+						"IPV4 address hasn't changed, %s = %s in %s",
+						r.Content, ipInfo.IP, r.Name)
 				}
 			}
 		}
-		time.Sleep(30 * time.Second)
 	}
 }
