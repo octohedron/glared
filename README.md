@@ -1,5 +1,13 @@
 # Automatically update the A record of your cloudflare domains with your public IPv4 address
 
+## Changelog
+
+- Added exclude as a list of strings to the config (see example), i.e. for excluding all the github pages IP addresses
+- Added a all: bool to the config (see example), it will update all the values
+- It will only update type A records for now
+
+---
+
 - Gets the external/public IPv4 Address
 - Uses the config.yaml to get the auth email, cloudflare token and list of
   domains
@@ -15,10 +23,13 @@ domains:
     name: "example0.com"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
     proxied: false
+    exclude:
+      - "185.199.109.153"
   - domain: "example1.com"
     subdomain: "example1"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
     proxied: false
+    all: true
   - domain: "example2.com"
     name: "example2"
     zone: "14188253e4f00003d5d45e03pp0ppp23"

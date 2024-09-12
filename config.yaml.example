@@ -1,12 +1,15 @@
 domains:
   - domain: "example0.com"
-    name: "subdomain0"
+    name: "example0.com"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
     proxied: false
+    exclude:
+      - "185.199.109.153"
   - domain: "example1.com"
     subdomain: "example1"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
     proxied: false
+    all: true
   - domain: "example2.com"
     name: "example2"
     zone: "14188253e4f00003d5d45e03pp0ppp23"
