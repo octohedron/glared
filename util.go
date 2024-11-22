@@ -20,7 +20,7 @@ func sInSlice(s string, slice []string) bool {
 
 func containsInList(s string, slice []string) bool {
 	for i := 0; i < len(slice); i++ {
-		if strings.Contains(slice[i], s) {
+		if strings.Contains(s, slice[i]) {
 			return true
 		}
 	}
