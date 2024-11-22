@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -81,8 +82,14 @@ func updateDNS(r Result, ip string) {
 	updateResult := updateDNSResult{}
 	err = json.Unmarshal(body, &updateResult)
 	logPanic(err)
-	if len(updateResult.Errors) > 0 {
-		logPanic(errors.New(updateResult.Errors[0].Message))
+	for i := 0; i < len(updateResult.Errors); i++ {
+		if strings.Contains(updateResult.Errors[i].Message,
+			"record already exists") {
+			logger.Info("Attempted to update an already existing record:",
+				updateResult.Errors[i].Message)
+		} else {
+			logger.Info("Unknown error:", updateResult.Errors[i].Message)
+		}
 	}
 }
 
