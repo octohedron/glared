@@ -9,9 +9,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func sInSlice(s string, slice []string) bool {
+func containsInList(s string, slice []string) bool {
 	for _, t := range slice {
 		if s == t {
+			return true
+		}
+	}
+	return false
+}
+
+func containsInList(s string, slice []string) bool {
+	for i := 0; i < len(slice); i++ {
+		if strings.Contains(slice[i], s) {
 			return true
 		}
 	}
@@ -32,7 +41,7 @@ func DebugStackFormatter() string {
 	var stack []string
 	for i := 1; i < len(stackLines); i++ {
 		line := stackLines[i]
-		if sInSlice(line, []string{"runtime", "testing", "logrus", "logging"}) {
+		if containsInList(line, []string{"runtime", "testing", "logrus", "logging"}) {
 			continue
 		}
 		fileName := ""
@@ -58,7 +67,7 @@ func DebugStackFormatter() string {
 		if fileName != "" {
 			funcName += " " + fileName
 		}
-		if funcName != "" && fileName != "" && !sInSlice(funcName, stack) && !sInSlice(fileName, stack) {
+		if funcName != "" && fileName != "" && !containsInList(funcName, stack) && !containsInList(fileName, stack) {
 			stack = append([]string{funcName}, stack...)
 		}
 	}
