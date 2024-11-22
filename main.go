@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/spf13/viper"
@@ -18,7 +17,7 @@ var (
 
 func logPanic(err error) {
 	if err != nil {
-		log.Panicf("%s: %s \n", "Error", err)
+		logger.Panicf("%s: %s \n", "Error", err)
 	}
 }
 
@@ -38,7 +37,7 @@ func getZoneDNSList(d domain) zoneDNSList {
 	zoneListUrl := fmt.Sprintf(
 		"https://api.cloudflare.com/client/v4/zones/%s/dns_records?type=A",
 		d.Zone)
-	fmt.Println("zoneListUrl", zoneListUrl)
+	logger.Println("zoneListUrl", zoneListUrl)
 	req, err := http.NewRequest("GET", zoneListUrl, nil)
 	logPanic(err)
 	setHeaders(req, true)
@@ -70,7 +69,7 @@ func updateDNS(r Result, ip string) {
 	updateDNSURL := fmt.Sprintf(
 		"https://api.cloudflare.com/client/v4/zones/%s/dns_records/%s",
 		r.ZoneID, r.ID)
-	fmt.Println("updateDNSURL", updateDNSURL)
+	logger.Println("updateDNSURL", updateDNSURL)
 	jsonValue, _ := json.Marshal(newDNS)
 	req, err := http.NewRequest("PUT", updateDNSURL, bytes.NewBuffer(jsonValue))
 	logPanic(err)
@@ -122,7 +121,7 @@ func main() {
 		dnsRecords := getZoneDNSList(d)
 		for _, r := range dnsRecords.Results {
 			if ipInfo.IP == r.Content {
-				log.Printf("IPV4 address hasn't changed, %s = %s in %s",
+				logger.Printf("IPV4 address hasn't changed, %s = %s in %s",
 					r.Content, ipInfo.IP, r.Name)
 				continue
 			}
@@ -137,7 +136,7 @@ func main() {
 				continue
 			}
 			if d.All || (r.Name == d.Name || r.Name == d.Name+"."+d.Domain) {
-				log.Printf(
+				logger.Printf(
 					"IPV4 address changed from %s to %s in %s, updating\n",
 					r.Content, ipInfo.IP, r.Name)
 				updateDNS(r, ipInfo.IP)
