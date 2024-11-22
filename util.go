@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func containsInList(s string, slice []string) bool {
+func sInSlice(s string, slice []string) bool {
 	for _, t := range slice {
 		if s == t {
 			return true
